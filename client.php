@@ -50,9 +50,19 @@ if(isset($_POST["username"])and isset($_POST["password"])) {
             $timestamp = date("Y-m-d H:i:s", time()); // Format for DATETIME or TIMESTAMP
             $user = $_SESSION['user'];
             $password = $_SESSION['password'];
-            $query = "INSERT INTO `record`(`username`, `password`, `answer`, `created_at`) VALUES ('$user', '$password', '$answer', '$timestamp')";
-            $result=$conn->query($query);
-            if (!$result ) die ('<br> <b>Query failed</b>');
+//            $query = "INSERT INTO `record`(`username`, `password`, `answer`, `created_at`) VALUES ('$user', '$password', '$answer', '$timestamp')";
+//            $result=$conn->query($query);
+//            if (!$result ) die ('<br> <b>Query failed</b>');
+//            $conn->close();
+//          ##Xử lý SQL Injection
+            $query = "INSERT INTO `record`(`username`, `password`, `answer`, `created_at`) VALUES (?, ?, ?, ?)";
+            $stmt = $conn->prepare($query);
+            if ($stmt === false) {
+                die('Prepare failed: ' . htmlspecialchars($conn->error));
+            }
+            $stmt->bind_param("ssss", $user, $password, $answer, $timestamp);
+            $result = $stmt->execute();
+            $stmt->close();
             $conn->close();
         }
     }
