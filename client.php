@@ -13,7 +13,7 @@ session_start();
 if(isset($_POST["username"])and isset($_POST["password"])) {
     $user = $_POST["username"];
     $password = $_POST["password"];
-    if(strlen($user)!=8) header("location:./index.php");
+    if(strlen($user)<7 or strlen($user)>9) header("location:./index.php");
     $_SESSION['user'] = $user;
     $_SESSION['password'] = $password;
 }
