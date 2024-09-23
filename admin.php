@@ -61,15 +61,7 @@ if (isset($_POST['delete_all'])) {
 }
 
 $order_by = isset($_GET['order']) && $_GET['order'] === 'desc' ? 'DESC' : 'ASC';
-$query = "SELECT * FROM record ORDER BY created_at $order_by";
-$results = $conn->query($query);
-
-$total_rows = $results->num_rows;
-$limit = 50;
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$start = ($page - 1) * $limit;
-
-$query = "SELECT * FROM record ORDER BY created_at $order_by LIMIT $start, $limit";
+$query = "SELECT * FROM record ORDER BY username $order_by";
 $paged_results = $conn->query($query);
 ?>
 
@@ -115,15 +107,15 @@ $paged_results = $conn->query($query);
                 <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Username</th>
+                    <th><a href="?order=<?php echo $order_by === 'ASC' ? 'desc' : 'asc'; ?>">Username</a></th>
                     <th>Password</th>
                     <th>Answer</th>
-                    <th><a href="?order=<?php echo $order_by === 'ASC' ? 'desc' : 'asc'; ?>">Created At</a></th>
+                    <th>Created At</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php if ($paged_results->num_rows > 0): ?>
-                    <?php $stt = $start + 1; while ($row = $paged_results->fetch_assoc()): ?>
+                    <?php $stt = 1; while ($row = $paged_results->fetch_assoc()): ?>
                         <tr>
                             <td><?php echo $stt++; ?></td>
                             <td><?php echo $row['username']; ?></td>
@@ -145,9 +137,6 @@ $paged_results = $conn->query($query);
         </div>
     </div>
 </div>
-<footer>
-    <p> @Tin Học Đại Cương-NTU </p>
-</footer>
 
 <script>
     document.getElementById('account-management-btn').addEventListener('click', function() {
